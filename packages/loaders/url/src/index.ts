@@ -132,7 +132,7 @@ export interface LoadFromUrlOptions extends BaseLoaderOptions, Partial<Introspec
   /**
    * Connection Parameters for WebSockets connection
    */
-  connectionParams?: ClientOptions['connectionParams'];
+  connectionParams?: Record<string, unknown> | (() => Record<string, unknown>);
   /**
    * Enable Batching
    */
@@ -523,9 +523,9 @@ export class UrlLoader implements Loader<LoadFromUrlOptions> {
     const subscriptionClient = createClient({
       url: WS_URL,
       webSocketImpl,
-      connectionParams: async () => {
+      connectionParams: () => {
         const optionsConnectionParams =
-          (typeof connectionParams === 'function' ? await connectionParams() : connectionParams) || {};
+          (typeof connectionParams === 'function' ? connectionParams() : connectionParams) || {};
         return Object.assign(optionsConnectionParams, executorConnectionParams);
       },
       lazy: true,
