@@ -569,6 +569,8 @@ export class UrlLoader implements Loader<LoadFromUrlOptions> {
 
     const observerById = new Map<string, Observer<ExecutionResult<any>>>();
 
+    let executorConnectionParams = {};
+
     let websocket: WebSocket | null = null;
 
     const ensureWebsocket = () => {
@@ -589,6 +591,7 @@ export class UrlLoader implements Loader<LoadFromUrlOptions> {
             payload = options?.connectionParams;
             break;
         }
+        payload = Object.assign(payload, executorConnectionParams);
         websocket!.send(
           JSON.stringify({
             type: LEGACY_WS.CONNECTION_INIT,
@@ -611,6 +614,18 @@ export class UrlLoader implements Loader<LoadFromUrlOptions> {
     };
 
     return function legacyExecutor(request: ExecutionRequest) {
+      // additional connection params can be supplied through the "webSocketConnectionParams" field in extensions.
+      // TODO: connection params only from the FIRST operation in lazy mode will be used (detect connectionParams changes and reconnect, too implicit?)
+      if (
+        request.extensions?.['webSocketConnectionParams'] &&
+        typeof request.extensions?.['webSocketConnectionParams'] === 'object'
+      ) {
+        executorConnectionParams = Object.assign(
+          executorConnectionParams,
+          request.extensions['webSocketConnectionParams']
+        );
+      }
+
       const id = Date.now().toString();
       return observableToAsyncIterable({
         subscribe(observer) {
