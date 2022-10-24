@@ -132,7 +132,7 @@ export interface LoadFromUrlOptions extends BaseLoaderOptions, Partial<Introspec
   /**
    * Connection Parameters for WebSockets connection
    */
-  connectionParams?: any;
+  connectionParams?: ClientOptions['connectionParams'];
   /**
    * Enable Batching
    */
@@ -519,13 +519,24 @@ export class UrlLoader implements Loader<LoadFromUrlOptions> {
       https: 'wss',
       http: 'ws',
     });
+    let executorConnectionParams = {};
     const subscriptionClient = createClient({
       url: WS_URL,
       webSocketImpl,
-      connectionParams,
+      connectionParams: async () => {
+        const optionsConnectionParams =
+          (typeof connectionParams === 'function' ? await connectionParams() : connectionParams) || {};
+        return Object.assign(optionsConnectionParams, executorConnectionParams);
+      },
       lazy: true,
     });
     return ({ document, variables, operationName, extensions }) => {
+      // additional connection params can be supplied through the "webSocketConnectionParams" field in extensions.
+      // TODO: connection params only from the FIRST operation in lazy mode will be used (detect connectionParams changes and reconnect, too implicit?)
+      if (extensions?.['webSocketConnectionParams'] && typeof extensions?.['webSocketConnectionParams'] === 'object') {
+        executorConnectionParams = Object.assign(executorConnectionParams, extensions['webSocketConnectionParams']);
+      }
+
       const query = print(document);
       return observableToAsyncIterable({
         subscribe: observer => {
