@@ -1,5 +1,14 @@
 # @graphql-tools/prisma-loader
 
+## 7.2.51
+
+### Patch Changes
+
+- [#4930](https://github.com/ardatan/graphql-tools/pull/4930) [`cbc2fa8b`](https://github.com/ardatan/graphql-tools/commit/cbc2fa8b9f057f32f56088742c02e7b6628d84cb) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@types/jsonwebtoken@^9.0.0` ↗︎](https://www.npmjs.com/package/@types/jsonwebtoken/v/9.0.0) (from `^8.5.0`, in `dependencies`)
+- Updated dependencies [[`0e5d250c`](https://github.com/ardatan/graphql-tools/commit/0e5d250cbac7ab003c45020b5ea464a8924eed01)]:
+  - @graphql-tools/url-loader@7.16.30
+
 ## 7.2.50
 
 ### Patch Changes

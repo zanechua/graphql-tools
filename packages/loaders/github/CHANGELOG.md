@@ -1,5 +1,12 @@
 # @graphql-tools/github-loader
 
+## 7.3.23
+
+### Patch Changes
+
+- [#4941](https://github.com/ardatan/graphql-tools/pull/4941) [`0e5d250c`](https://github.com/ardatan/graphql-tools/commit/0e5d250cbac7ab003c45020b5ea464a8924eed01) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/fetch@^0.6.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.0) (from `^0.5.0`, in `dependencies`)
+
 ## 7.3.22
 
 ### Patch Changes
